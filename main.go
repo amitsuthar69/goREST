@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,78 +18,19 @@ var Posts = []Post{
 	{Id: "4", Title: "Post4", AuthorName: "harshil"},
 }
 
-// CREATE
-func addPost(c *gin.Context) {
-	var newPost Post
-	if err := c.BindJSON(&newPost); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	Posts = append(Posts, newPost)
-	c.IndentedJSON(http.StatusCreated, newPost)
-}
-
-// READ
-func getPosts(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, Posts)
-}
-
-func getPostById(c *gin.Context) {
-	id := c.Param("id")
-	for _, post := range Posts {
-		if post.Id == id {
-			c.IndentedJSON(http.StatusOK, post)
-			return
-		}
-	}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "post not found!"})
-}
-
-// UPDATE
-func updatePost(c *gin.Context) {
-	id := c.Param("id")
-	var updatedPost Post
-	if err := c.BindJSON(&updatedPost); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	for i, post := range Posts {
-		if post.Id == id {
-			Posts[i] = updatedPost
-			c.IndentedJSON(http.StatusOK, Posts[i])
-			return
-		}
-	}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "post not found!"})
-}
-
-// DELETE
-func deletePost(c *gin.Context) {
-	id := c.Param("id")
-	for i, post := range Posts {
-		if post.Id == id {
-			Posts = append(Posts[:i], Posts[i+1:]...)
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "post deleted successfully"})
-			return
-		}
-	}
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "post not found!"})
-}
-
 func main() {
 	router := gin.Default()
-	router.GET("/posts", getPosts)
-	router.POST("/posts", addPost)
-	router.GET("/posts/:id", getPostById)
-	router.PUT("/posts/:id", updatePost)
-	router.DELETE("/posts/:id", deletePost)
+	router.GET("/posts", GetPosts)
+	router.POST("/posts", AddPost)
+	router.GET("/posts/:id", GetPostById)
+	router.PUT("/posts/:id", UpdatePost)
+	router.DELETE("/posts/:id", DeletePost)
 	router.Run("localhost:3000")
 }
 
 /*
 curl http://localhost:3000/posts \
 --include \
---header "Contnt-Type: application/json" \
 --request "POST" \
 --data '{"id":3, "title":"Post3","authorName":"amit"}'
 
