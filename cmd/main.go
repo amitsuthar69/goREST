@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	Posts, _ = LoadPostFromDB()
 	router := gin.Default()
 	router.GET("/posts", GetPosts)
 	router.POST("/posts", AddPost)
@@ -12,6 +13,11 @@ func main() {
 	router.PUT("/posts/:id", UpdatePost)
 	router.DELETE("/posts/:id", DeletePost)
 	router.Run("localhost:3000")
+	defer func() {
+		if err := SavePostToDB(Posts); err != nil {
+			panic(err)
+		}
+	}()
 }
 
 /*

@@ -14,12 +14,23 @@ func AddPost(c *gin.Context) {
 		return
 	}
 	Posts = append(Posts, newPost)
+
+	if err := SavePostToDB(Posts); err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "failed to save into db"})
+		return
+	}
+
 	c.IndentedJSON(http.StatusCreated, newPost)
 }
 
 // READ
 func GetPosts(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, Posts)
+	posts, err := LoadPostFromDB()
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "failed to load from db"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, posts)
 }
 
 func GetPostById(c *gin.Context) {
@@ -44,6 +55,10 @@ func UpdatePost(c *gin.Context) {
 	for i, post := range Posts {
 		if post.Id == id {
 			Posts[i] = updatedPost
+			if err := SavePostToDB(Posts); err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "failed to save into db"})
+				return
+			}
 			c.IndentedJSON(http.StatusOK, Posts[i])
 			return
 		}
@@ -57,6 +72,10 @@ func DeletePost(c *gin.Context) {
 	for i, post := range Posts {
 		if post.Id == id {
 			Posts = append(Posts[:i], Posts[i+1:]...)
+			if err := SavePostToDB(Posts); err != nil {
+				c.IndentedJSON(http.StatusInternalServerError, gin.H{"error": "failed to save into db"})
+				return
+			}
 			c.IndentedJSON(http.StatusOK, gin.H{"message": "post deleted successfully"})
 			return
 		}
