@@ -1,5 +1,5 @@
 build:
-	@go build -o bin/goREST
+	@go build -o bin/goREST ./cmd
 
 run: build
 	@./bin/goREST
