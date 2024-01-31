@@ -1,15 +1,16 @@
 ### A Go REST API which reads and writes to a `json` file.
 
 ```
-> bin
-    goREST     <- exe file
-> cmd
-    apis.go    <- route handlers
-    fileio.go  <- io handlers
-    main.go    <- main go file
-    models.go  <- types
-> db
-    posts.json <- fake NoSQL db
+ goREST
+├── bin
+│   └── goREST (executable file)
+├── cmd
+│   ├── apis.go (route handlers)
+│   ├── fileio.go (IO handlers)
+│   ├── main.go (main Go file)
+│   └── models.go (types)
+└── db
+    └── posts.json (fake NoSQL db)
 ```
 
 ---
