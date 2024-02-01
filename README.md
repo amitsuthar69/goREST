@@ -2,23 +2,25 @@
 
 ```
  goREST
-├── bin
-│   └── goREST (executable file)
 ├── cmd
 │   ├── apis.go (route handlers)
 │   ├── fileio.go (IO handlers)
 │   ├── main.go (main Go file)
 │   └── models.go (types)
-└── db
-    └── posts.json (fake NoSQL db)
+├── db
+│    └── posts.json (fake NoSQL db)
+└── tmp
+     └── main (executable file)
 ```
 
 ---
 
-**To run the server, use the command :**
+**I'm using [air](https://github.com/cosmtrek/air) package for live server reloading. Check the `.air.toml` config.**
+
+**To run the server, use the command in the root of project :**
 
 ```bash
-make run
+air
 ```
 
 ---
